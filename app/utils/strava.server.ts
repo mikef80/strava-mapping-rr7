@@ -6,7 +6,7 @@ getStravaAuthUrl()
 
 exchangeCodeForToken(code)
 
-TODO refreshAccessToken(refreshToken)
+refreshAccessToken(refreshToken)
 
 getActivities(accessToken)
 
