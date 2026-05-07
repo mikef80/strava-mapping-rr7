@@ -1,32 +1,22 @@
+import { exchangeCodeForToken } from "~/utils/strava.server";
 import type { Route } from "../../+types/root";
+import { commitSession, getSession } from "~/utils/session.server";
+import { redirect } from "react-router";
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const url = new URL(request.url);
+  const code: string = url.searchParams.get("code") || "";
 
-  const state = url.searchParams.get("state");
-  const code = url.searchParams.get("code");
-  const scope = url.searchParams.get("scope");
+  if (!code) throw new Error("No code returned from login");
 
-  console.log(state);
-  console.log(code);
-  console.log(scope);
+  const data = await exchangeCodeForToken(code);
 
-  const data = {
-    client_id: process.env.STRAVA_CLIENT_ID,
-    client_secret: process.env.STRAVA_CLIENT_SECRET,
-    code: code,
-    grant_type: "authorization_code",
-  };
+  const session = await getSession(request.headers.get("Cookie"));
+  session.set("accessToken", data.access_token);
+  session.set("refreshToken", data.refresh_token);
+  session.set("expiresAt", data.expires_at);
 
-  const res = await fetch(`https://www.strava.com/api/v3/oauth/token`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
+  return redirect("/", {
+    headers: { "Set-Cookie": await commitSession(session) },
   });
-
-  const json = await res.json();
-
-  console.log(json, "<--json");
 };
