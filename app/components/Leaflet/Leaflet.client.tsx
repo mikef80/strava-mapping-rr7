@@ -2,7 +2,7 @@ import L from "leaflet";
 import { MapContainer, Marker, Popup, TileLayer, useMap, Polyline } from "react-leaflet";
 import type { StravaActivity } from "~/types/strava";
 import polyline from "@mapbox/polyline";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 function FitBounds({ positions }: { positions: [number, number][] }) {
   const map = useMap();
@@ -15,10 +15,20 @@ function FitBounds({ positions }: { positions: [number, number][] }) {
 }
 
 const Leaflet = ({ activities }: { activities: StravaActivity[] }) => {
+  const [position, setPosition] = useState<{ lat: number; long: number } | null>(null);
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      setPosition({ lat: position.coords.latitude, long: position.coords.longitude });
+    });
+  }, []);
+
+  if (!position) return null;
+
   return (
     <div id='map' style={{ height: "100%" }}>
       <MapContainer
-        center={[50.255706781193744, -5.289268677584664]}
+        center={[position.lat, position.long]}
         zoom={12}
         scrollWheelZoom={false}
         style={{ height: "100%", width: "100%" }}
@@ -39,7 +49,6 @@ const Leaflet = ({ activities }: { activities: StravaActivity[] }) => {
             color='blue'
           />
         ))}
-        {/* <FitBounds positions={positions} /> */}
       </MapContainer>
     </div>
   );
