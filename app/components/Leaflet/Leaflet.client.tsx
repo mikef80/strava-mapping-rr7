@@ -18,9 +18,12 @@ const Leaflet = ({ activities }: { activities: StravaActivity[] }) => {
   const [position, setPosition] = useState<{ lat: number; long: number } | null>(null);
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition((position) => {
-      setPosition({ lat: position.coords.latitude, long: position.coords.longitude });
-    });
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setPosition({ lat: position.coords.latitude, long: position.coords.longitude });
+      },
+      () => setPosition({ lat: 0, long: 0 }),
+    );
   }, []);
 
   if (!position) return null;
