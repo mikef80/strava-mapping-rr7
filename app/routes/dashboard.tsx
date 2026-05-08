@@ -2,9 +2,9 @@ import { lazy, Suspense, useState } from "react";
 import { useLoaderData } from "react-router";
 import { commitSession, getSession } from "~/utils/session.server";
 import { getActivities, refreshAccessToken } from "~/utils/strava.server";
-import type { Route } from "../+types/root";
+import type { Route } from "./+types/dashboard";
 import { ClientOnly } from "~/components/ClientOnly/ClientOnly";
-// import Leaflet from "~/components/Leaflet/Leaflet.client";
+import type { StravaActivity } from "~/types/strava";
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const session = await getSession(request.headers.get("Cookie"));
@@ -28,19 +28,19 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 
   const activities = await getActivities(accessToken);
 
-  return Response.json(activities, { headers });
+  return { activities, headers: Object.fromEntries(headers) };
 };
 
 const Leaflet = lazy(() => import("~/components/Leaflet/Leaflet.client"));
 
-const Dashboard = () => {
-  const [activities, setActivities] = useState(useLoaderData());
+const Dashboard = ({ loaderData }: Route.ComponentProps) => {
+  const [activities, setActivities] = useState(loaderData.activities);
 
   return (
     <ClientOnly>
       {() => (
         <Suspense fallback={<div>Loading map...</div>}>
-          <Leaflet />
+          <Leaflet activities={activities} />
         </Suspense>
       )}
     </ClientOnly>

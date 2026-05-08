@@ -1,6 +1,20 @@
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import L from "leaflet";
+import { MapContainer, Marker, Popup, TileLayer, useMap, Polyline } from "react-leaflet";
+import type { StravaActivity } from "~/types/strava";
+import polyline from "@mapbox/polyline";
+import { useEffect } from "react";
 
-const Leaflet = () => {
+function FitBounds({ positions }: { positions: [number, number][] }) {
+  const map = useMap();
+  useEffect(() => {
+    if (positions.length > 0) {
+      map.fitBounds(L.latLngBounds(positions));
+    }
+  }, [map, positions]);
+  return null;
+}
+
+const Leaflet = ({ activities }: { activities: StravaActivity[] }) => {
   return (
     <div id='map' style={{ height: "100%" }}>
       <MapContainer
@@ -12,11 +26,14 @@ const Leaflet = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         />
-        <Marker position={[51.505, -0.09]}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker>
+        {activities.map((activity) => (
+          <Polyline
+            key={activity.id}
+            positions={polyline.decode(activity.map.summary_polyline!)}
+            color='blue'
+          />
+        ))}
+        {/* <FitBounds positions={positions} /> */}
       </MapContainer>
     </div>
   );
