@@ -65,14 +65,28 @@ export const refreshAccessToken = async (refreshToken: string) => {
 };
 
 export const getActivities = async (accessToken: string) => {
-  const res = await fetch("https://www.strava.com/api/v3/athlete/activities", {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
+  let page = 1;
+  const perPage = 200;
+  const activities = [];
 
-  const data: StravaActivity[] = await res.json();
+  while (true) {
+    const res = await fetch(
+      `https://www.strava.com/api/v3/athlete/activities?per_page=${perPage}&page=${page}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
 
-  return data;
+    const data: StravaActivity[] = await res.json();
+
+    if (!data.length) break;
+
+    activities.push(data);
+    page++;
+  }
+
+  return activities.flat();
 };
