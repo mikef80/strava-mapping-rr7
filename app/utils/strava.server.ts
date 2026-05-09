@@ -1,4 +1,4 @@
-import { redirect } from "react-router";
+import { readFile, writeFile } from "node:fs/promises";
 import type { StravaActivity, StravaTokenResponse } from "~/types/strava";
 
 /*
@@ -65,28 +65,44 @@ export const refreshAccessToken = async (refreshToken: string) => {
 };
 
 export const getActivities = async (accessToken: string) => {
-  let page = 1;
   const perPage = 200;
-  const activities = [];
+  let page = 1;
+  const activities: StravaActivity[] = [];
+
+  try {
+    const cached = await readFile("./app/data/data.json", "utf8");
+    console.log("using cache");
+    return JSON.parse(cached);
+  } catch {
+    console.log("fetching from strava");
+  }
 
   while (true) {
     const res = await fetch(
       `https://www.strava.com/api/v3/athlete/activities?per_page=${perPage}&page=${page}`,
       {
-        method: "GET",
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       },
     );
 
+    if (!res.ok) {
+      throw new Error(`Strava API error: ${res.status}`);
+    }
+
     const data: StravaActivity[] = await res.json();
 
     if (!data.length) break;
 
-    activities.push(data);
+    activities.push(...data);
+
+    if (data.length < perPage) break;
+
     page++;
   }
 
-  return activities.flat();
+  await writeFile("./app/data/data.json", JSON.stringify(activities, null, 2), "utf8");
+
+  return activities;
 };
