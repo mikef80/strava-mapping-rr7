@@ -4,6 +4,8 @@ import polyline from "@mapbox/polyline";
 import { useEffect, useState } from "react";
 import MapCoords from "./MapCoords";
 import { LatLngBounds } from "leaflet";
+import PopupContent from "../PopupContent/PopupContent";
+import { activityColours } from "~/types/activityColours";
 
 function FitBounds({ activities }: { activities: StravaActivity[] }) {
   const map = useMap();
@@ -55,19 +57,9 @@ const Leaflet = ({ activities }: { activities: StravaActivity[] }) => {
           <Polyline
             key={activity.id}
             positions={polyline.decode(activity.map.summary_polyline!)}
-            color='blue'>
+            color={activityColours[activity.type]}>
             <Popup>
-              <h2>{activity.name}</h2>
-              <p>{activity.type}</p>
-              <p>
-                {new Date(activity.start_date).toLocaleDateString("en-GB", {
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                })}
-              </p>
-              <p>{(activity.distance / 1609.34).toFixed(2)} mi</p>
-              <p>{(activity.distance / 1000).toFixed(2)} km</p>
+              <PopupContent activity={activity} />
             </Popup>
           </Polyline>
         ))}

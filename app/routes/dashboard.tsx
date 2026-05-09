@@ -7,7 +7,7 @@ import { ClientOnly } from "~/components/ClientOnly/ClientOnly";
 import type { StravaActivity } from "~/types/strava";
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-    const session = await getSession(request.headers.get("Cookie"));
+  const session = await getSession(request.headers.get("Cookie"));
 
   let accessToken = session.get("accessToken");
   const expiresAt = session.get("expiresAt");
