@@ -1,15 +1,13 @@
 import { lazy, Suspense, useState } from "react";
 import { useLoaderData } from "react-router";
 import { commitSession, getSession } from "~/utils/session.server";
-import { /* getActivities, */ refreshAccessToken } from "~/utils/strava.server";
+import { getActivities, refreshAccessToken } from "~/utils/strava.server";
 import type { Route } from "./+types/dashboard";
 import { ClientOnly } from "~/components/ClientOnly/ClientOnly";
 import type { StravaActivity } from "~/types/strava";
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-  const { activities } = await import("~/data/activities"); // remove once pulling activities from api again
-  
-  const session = await getSession(request.headers.get("Cookie"));
+    const session = await getSession(request.headers.get("Cookie"));
 
   let accessToken = session.get("accessToken");
   const expiresAt = session.get("expiresAt");
@@ -28,7 +26,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
     headers.set("Set-Cookie", await commitSession(session));
   }
 
-  // const activities = await getActivities(accessToken);
+  const activities = await getActivities(accessToken);
 
   return { activities, headers: Object.fromEntries(headers) };
 };
@@ -47,7 +45,6 @@ const Dashboard = ({ loaderData }: Route.ComponentProps) => {
       )}
     </ClientOnly>
   );
-  // return <div>{activities.toString()}</div>;
 };
 
 export default Dashboard;
