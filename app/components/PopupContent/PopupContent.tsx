@@ -2,11 +2,15 @@ import type { ReactNode } from "react";
 
 import styles from "./PopupContent.module.scss";
 import type { StravaActivity } from "~/types/strava";
+import { ExternalLink } from "lucide-react";
 
 const PopupContent = ({ activity }: { activity: StravaActivity }) => {
   return (
     <div className={styles.container}>
-      <h2 className={styles.h2}>{activity.name}</h2>
+      <a href={`https://www.strava.com/activities/${activity.id}`} target='_blank'>
+        <h2 className={styles.h2}>{activity.name}</h2>
+        <ExternalLink size={14} />
+      </a>
       <div className={styles.title}>
         <div className={styles.type}>{activity.type}</div>
         <div className={styles.date}>
