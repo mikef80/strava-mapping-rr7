@@ -5,6 +5,7 @@ import { getActivities, refreshAccessToken } from "~/utils/strava.server";
 import type { Route } from "./+types/dashboard";
 import { ClientOnly } from "~/components/ClientOnly/ClientOnly";
 import type { StravaActivity } from "~/types/strava";
+import DashboardContent from "~/components/DashboardContent/DashboardContent";
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const session = await getSession(request.headers.get("Cookie"));
@@ -36,15 +37,7 @@ const Leaflet = lazy(() => import("~/components/Leaflet/Leaflet.client"));
 const Dashboard = ({ loaderData }: Route.ComponentProps) => {
   const [activities, setActivities] = useState(loaderData.activities);
 
-  return (
-    <ClientOnly>
-      {() => (
-        <Suspense fallback={<div>Loading map...</div>}>
-          <Leaflet activities={activities} />
-        </Suspense>
-      )}
-    </ClientOnly>
-  );
+  return <DashboardContent activities={activities} />;
 };
 
 export default Dashboard;
