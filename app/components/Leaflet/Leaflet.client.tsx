@@ -1,11 +1,12 @@
 import { MapContainer, Popup, TileLayer, useMap, Polyline } from "react-leaflet";
 import type { StravaActivity } from "~/types/strava";
 import polyline from "@mapbox/polyline";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import MapCoords from "./MapCoords";
-import { LatLngBounds } from "leaflet";
+import L, { LatLngBounds } from "leaflet";
 import PopupContent from "../PopupContent/PopupContent";
 import { activityColours } from "~/types/activityColours";
+import ActivityPolyline from "../ActivityPolyline/ActivityPolyline";
 
 function FitBounds({ activities }: { activities: StravaActivity[] }) {
   const map = useMap();
@@ -23,6 +24,7 @@ function FitBounds({ activities }: { activities: StravaActivity[] }) {
 
 const Leaflet = ({ activities }: { activities: StravaActivity[] }) => {
   const [position, setPosition] = useState<{ lat: number; long: number } | null>(null);
+  const [selected, setSelected] = useState<number | null>(null);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -54,14 +56,12 @@ const Leaflet = ({ activities }: { activities: StravaActivity[] }) => {
         />
         <FitBounds activities={activities} />
         {activities.map((activity) => (
-          <Polyline
+          <ActivityPolyline
             key={activity.id}
-            positions={polyline.decode(activity.map.summary_polyline!)}
-            color={activityColours[activity.type]}>
-            <Popup>
-              <PopupContent activity={activity} />
-            </Popup>
-          </Polyline>
+            selected={selected === activity.id}
+            activity={activity}
+            setSelected={setSelected}
+          />
         ))}
       </MapContainer>
     </div>
