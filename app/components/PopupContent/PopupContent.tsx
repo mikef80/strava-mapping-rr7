@@ -8,6 +8,7 @@ const PopupContent = ({ activity }: { activity: StravaActivity }) => {
     <div className={styles.container}>
       <h2 className={styles.h2}>{activity.name}</h2>
       <div className={styles.title}>
+        <div className={styles.type}>{activity.type}</div>
         <div className={styles.date}>
           {new Date(activity.start_date).toLocaleDateString("en-GB", {
             day: "numeric",
@@ -15,7 +16,6 @@ const PopupContent = ({ activity }: { activity: StravaActivity }) => {
             year: "numeric",
           })}
         </div>
-        <div className={styles.type}>{activity.type}</div>
       </div>
       <div className={styles.mi}>Miles: {(activity.distance / 1609.34).toFixed(2)} mi</div>
       <div className={styles.km}>Kilometres: {(activity.distance / 1000).toFixed(2)} km</div>
