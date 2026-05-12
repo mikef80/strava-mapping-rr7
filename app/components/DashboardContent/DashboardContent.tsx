@@ -3,12 +3,10 @@ import { ClientOnly } from "../ClientOnly/ClientOnly";
 import Leaflet from "../Leaflet/Leaflet.client";
 import type { StravaActivity } from "~/types/strava";
 
-import styles from "./DashboardContent.module.scss";
-
 const DashboardContent = ({ activities }: { activities: StravaActivity[] }) => {
   return (
-    <main>
-      <h1>Strava</h1>
+    <main className='h-full flex flex-col p-4 gap-4'>
+      <h1 className='text-2xl'>Strava</h1>
       <ClientOnly>
         {() => (
           <Suspense fallback={<div>Loading map...</div>}>
