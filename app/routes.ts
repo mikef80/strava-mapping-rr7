@@ -5,4 +5,5 @@ export default [
   route("auth", "routes/auth/strava.tsx"),
   route("auth/callback", "routes/auth/strava.callback.tsx"),
   route("dashboard", "routes/dashboard.tsx"),
+  route("/.well-known/*", "routes/well-known.ts"), // Silences devtools error in terminal
 ] satisfies RouteConfig;
