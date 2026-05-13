@@ -22,6 +22,7 @@ interface DataTableProps<TData, TValue> {
 export const DataTable = <TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [rowSelection, setRowSelection] = useState({});
 
   const table = useReactTable({
     data,
@@ -32,7 +33,8 @@ export const DataTable = <TData, TValue>({ columns, data }: DataTableProps<TData
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
-    state: { sorting, columnFilters },
+    onRowSelectionChange: setRowSelection,
+    state: { sorting, columnFilters, rowSelection },
   });
 
   return (
@@ -65,7 +67,11 @@ export const DataTable = <TData, TValue>({ columns, data }: DataTableProps<TData
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                <TableRow
+                  key={row.id}
+                  onClick={row.getToggleSelectedHandler()}
+                  data-state={row.getIsSelected() ? "selected" : undefined}
+                  className='data-[state=selected]:bg-slate-200 hover:bg-slate-100 cursor-pointer'>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className='text-center'>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
