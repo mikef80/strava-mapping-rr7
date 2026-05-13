@@ -10,13 +10,13 @@ const DashboardContent = ({ activities }: { activities: StravaActivity[] }) => {
     <main className='h-full flex flex-col p-4 gap-4'>
       <h1 className='text-2xl'>Strava</h1>
       <DataTable columns={columns} data={activities} />
-      <ClientOnly>
+      {<ClientOnly>
         {() => (
           <Suspense fallback={<div>Loading map...</div>}>
             <Leaflet activities={activities} />
           </Suspense>
         )}
-      </ClientOnly>
+      </ClientOnly>}
     </main>
   );
 };
