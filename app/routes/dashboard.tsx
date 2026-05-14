@@ -1,10 +1,7 @@
-import { lazy, Suspense, useState } from "react";
-import { useLoaderData } from "react-router";
+import { lazy, useState } from "react";
 import { commitSession, getSession } from "~/utils/session.server";
 import { getActivities, refreshAccessToken } from "~/utils/strava.server";
 import type { Route } from "./+types/dashboard";
-import { ClientOnly } from "~/components/ClientOnly/ClientOnly";
-import type { StravaActivity } from "~/types/strava";
 import DashboardContent from "~/components/DashboardContent/DashboardContent";
 
 export const loader = async ({ request }: Route.LoaderArgs) => {

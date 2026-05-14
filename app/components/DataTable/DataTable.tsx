@@ -25,6 +25,11 @@ export const DataTable = <TData, TValue>({ columns, data }: DataTableProps<TData
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [rowSelection, setRowSelection] = useState({});
+  const [globalFilter, setGlobalFilter] = useState<string>("");
+
+  interface GlobalFilter {
+    globalFilter: any;
+  }
 
   const table = useReactTable({
     data,
@@ -35,19 +40,31 @@ export const DataTable = <TData, TValue>({ columns, data }: DataTableProps<TData
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    globalFilterFn: "includesString",
+    onGlobalFilterChange: setGlobalFilter,
     onRowSelectionChange: setRowSelection,
-    state: { sorting, columnFilters, rowSelection },
+    state: { sorting, columnFilters, rowSelection, globalFilter },
   });
 
   return (
     <div>
-      <div className='flex items-center py-4'>
+      <div className='flex items-center justify-between py-4'>
         <Input
           placeholder='Filter exercises...'
-          value={(table.getColumn("type")?.getFilterValue() as string) ?? ""}
-          onChange={(event) => table.getColumn("type")?.setFilterValue(event.target.value)}
+          value={globalFilter}
+          onChange={(e) => table.setGlobalFilter(String(e.target.value))}
           className='max-w-sm'
         />
+        <Button
+          variant={"destructive"}
+          className='cursor-pointer'
+          onClick={() => {
+            table.resetRowSelection();
+            table.resetSorting();
+            table.setGlobalFilter("");
+          }}>
+          Reset
+        </Button>
       </div>
       <div className='border-4 flex flex-col gap-4 py-4'>
         <Table>

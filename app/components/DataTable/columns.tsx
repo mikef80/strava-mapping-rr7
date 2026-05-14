@@ -9,36 +9,49 @@ export const columns: ColumnDef<StravaActivity>[] = [
   {
     id: "select",
     header: ({ table }) => (
-      <div className='flex justify-around'>
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label='Select all'
-        />
-        <p>Select all</p>
-      </div>
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label='Select all'
+        className='mx-auto cursor-pointer'
+      />
     ),
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label='Select row'
+        className='mx-auto cursor-pointer'
       />
     ),
     enableSorting: false,
     enableHiding: false,
   },
   {
+    accessorKey: "name",
+    header: ({ column }) => {
+      return (
+        <Button
+          className='cursor-pointer'
+          variant={"ghost"}
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+          Name
+        </Button>
+      );
+    },
+  },
+  {
     accessorKey: "start_date",
     header: ({ column }) => {
       return (
         <Button
+          className={"cursor-pointer"}
           variant={"ghost"}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-          Start Date
+          Date
         </Button>
       );
     },
@@ -52,6 +65,7 @@ export const columns: ColumnDef<StravaActivity>[] = [
     header: ({ column }) => {
       return (
         <Button
+          className={"cursor-pointer"}
           variant={"ghost"}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           Exercise Type
@@ -68,6 +82,7 @@ export const columns: ColumnDef<StravaActivity>[] = [
     header: ({ column }) => {
       return (
         <Button
+          className={"cursor-pointer"}
           variant={"ghost"}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           Distance (mi)
@@ -84,6 +99,7 @@ export const columns: ColumnDef<StravaActivity>[] = [
     header: ({ column }) => {
       return (
         <Button
+          className={"cursor-pointer"}
           variant={"ghost"}
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           Distance (km)
