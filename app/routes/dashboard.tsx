@@ -29,12 +29,8 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   return { activities, headers: Object.fromEntries(headers) };
 };
 
-const Leaflet = lazy(() => import("~/components/Leaflet/Leaflet.client"));
-
 const Dashboard = ({ loaderData }: Route.ComponentProps) => {
-  const [activities, setActivities] = useState(loaderData.activities);
-
-  return <DashboardContent activities={activities} />;
+  return <DashboardContent activities={loaderData.activities} />;
 };
 
 export default Dashboard;

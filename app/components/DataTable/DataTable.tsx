@@ -11,25 +11,25 @@ import {
 } from "@tanstack/react-table";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 import { Button } from "../ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "../ui/input";
-import { ChevronFirst, ChevronLast, ChevronLeft, ChevronRight } from "lucide-react";
 import DataTablePagination from "./DataTablePagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  onMapActivitiesChange?: (activities: TData[]) => void;
 }
 
-export const DataTable = <TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) => {
+export const DataTable = <TData, TValue>({
+  columns,
+  data,
+  onMapActivitiesChange,
+}: DataTableProps<TData, TValue>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [rowSelection, setRowSelection] = useState({});
   const [globalFilter, setGlobalFilter] = useState<string>("");
-
-  interface GlobalFilter {
-    globalFilter: any;
-  }
 
   const table = useReactTable({
     data,
@@ -45,6 +45,18 @@ export const DataTable = <TData, TValue>({ columns, data }: DataTableProps<TData
     onRowSelectionChange: setRowSelection,
     state: { sorting, columnFilters, rowSelection, globalFilter },
   });
+
+  useEffect(() => {
+    const selectedRows = table.getSelectedRowModel().rows;
+    const filteredRows = table.getFilteredRowModel().rows;
+
+    const mapActivities =
+      selectedRows.length > 0
+        ? selectedRows.map((row) => row.original)
+        : filteredRows.map((row) => row.original);
+
+    onMapActivitiesChange?.(mapActivities);
+  }, [sorting, columnFilters, rowSelection, globalFilter]);
 
   return (
     <div>
