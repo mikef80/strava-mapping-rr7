@@ -1,6 +1,5 @@
-import { lazy, useState } from "react";
 import { commitSession, getSession } from "~/utils/session.server";
-import { getActivities, refreshAccessToken } from "~/utils/strava.server";
+import { getActivities, getAthlete, refreshAccessToken } from "~/utils/strava.server";
 import type { Route } from "./+types/dashboard";
 import DashboardContent from "~/components/DashboardContent/DashboardContent";
 
@@ -25,12 +24,13 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   }
 
   const activities = await getActivities(accessToken);
+  const athlete = await getAthlete(accessToken);
 
-  return { activities, headers: Object.fromEntries(headers) };
+  return { activities, athlete, headers: Object.fromEntries(headers) };
 };
 
 const Dashboard = ({ loaderData }: Route.ComponentProps) => {
-  return <DashboardContent activities={loaderData.activities} />;
+  return <DashboardContent activities={loaderData.activities} athlete={loaderData.athlete} />;
 };
 
 export default Dashboard;

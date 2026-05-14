@@ -4,13 +4,22 @@ import Leaflet from "../Leaflet/Leaflet.client";
 import type { StravaActivity } from "~/types/strava";
 import { DataTable } from "../DataTable/DataTable";
 import { columns } from "../DataTable/columns";
+import Header from "../Header/Header";
+import Athlete from "../Athlete/Athlete";
 
-const DashboardContent = ({ activities }: { activities: StravaActivity[] }) => {
+const DashboardContent = ({
+  activities,
+  athlete,
+}: {
+  activities: StravaActivity[];
+  athlete: any;
+}) => {
   const [mapActivities, setMapActivities] = useState<StravaActivity[]>(activities);
 
   return (
     <main className='h-full flex flex-col p-4 gap-4'>
-      <h1 className='text-2xl'>Strava</h1>
+      <Header />
+      <Athlete athlete={athlete} />
       <DataTable
         columns={columns}
         data={activities}

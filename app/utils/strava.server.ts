@@ -1,5 +1,5 @@
 import { readFile, writeFile } from "node:fs/promises";
-import type { StravaActivity, StravaTokenResponse } from "~/types/strava";
+import type { StravaActivity, StravaAthlete, StravaTokenResponse } from "~/types/strava";
 
 /*
 getStravaAuthUrl()
@@ -71,7 +71,7 @@ export const getActivities = async (accessToken: string) => {
 
   try {
     const cached = await readFile("./app/data/data.json", "utf8");
-    console.log("using cache");
+    console.log("using cached activities");
     return JSON.parse(cached);
   } catch {
     console.log("fetching from strava");
@@ -105,4 +105,28 @@ export const getActivities = async (accessToken: string) => {
   await writeFile("./app/data/data.json", JSON.stringify(activities, null, 2), "utf8");
 
   return activities;
+};
+
+export const getAthlete = async (accessToken: string) => {
+  try {
+    const cached = await readFile("./app/data/athlete.json", "utf8");
+
+    console.log("using cached athlete");
+    return JSON.parse(cached);
+  } catch {
+    console.log("fetching from strava");
+  }
+  const res = await fetch("https://www.strava.com/api/v3/athlete", {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error(`Strava API error: ${res.status}`);
+  }
+
+  const athlete: StravaAthlete = await res.json();
+
+  return athlete;
 };
