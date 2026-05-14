@@ -19,7 +19,7 @@ export const getStravaAuthUrl = () => {
     redirect_uri: "http://localhost:5173/auth/callback",
     response_type: "code",
     approval_prompt: "auto",
-    scope: "activity:read_all",
+    scope: "activity:read_all,profile:read_all",
     state: "testing",
   });
 
