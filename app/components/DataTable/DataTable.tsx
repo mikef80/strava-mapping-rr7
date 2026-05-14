@@ -13,6 +13,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { Input } from "../ui/input";
+import { ChevronFirst, ChevronLast, ChevronLeft, ChevronRight } from "lucide-react";
+import DataTablePagination from "./DataTablePagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -47,7 +49,7 @@ export const DataTable = <TData, TValue>({ columns, data }: DataTableProps<TData
           className='max-w-sm'
         />
       </div>
-      <div className='border-4'>
+      <div className='border-4 flex flex-col gap-4 py-4'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -88,22 +90,7 @@ export const DataTable = <TData, TValue>({ columns, data }: DataTableProps<TData
             )}
           </TableBody>
         </Table>
-        <div className='flex items-center justify-center space-x-2 py-4'>
-          <Button
-            variant='outline'
-            size='sm'
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}>
-            Previous
-          </Button>
-          <Button
-            variant='outline'
-            size='sm'
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}>
-            Next
-          </Button>
-        </div>
+        <DataTablePagination table={table} />
       </div>
     </div>
   );
