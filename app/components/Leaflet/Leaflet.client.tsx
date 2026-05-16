@@ -38,7 +38,7 @@ const Leaflet = ({ activities }: { activities: StravaActivity[] }) => {
   if (!position) return null;
 
   return (
-    <div className='map' style={{ height: "100%", borderRadius: "1rem", overflow: "clip" }}>
+    <div id='map' className='h-125 rounded-[1rem] overflow-clip'>
       <MapContainer
         center={[position.lat, position.long]}
         zoom={12}

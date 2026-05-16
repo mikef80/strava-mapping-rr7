@@ -1,16 +1,25 @@
 import { Suspense, useState } from "react";
 import { ClientOnly } from "../ClientOnly/ClientOnly";
 import Leaflet from "../Leaflet/Leaflet.client";
-import type { StravaActivity } from "~/types/strava";
+import type { StravaActivity, StravaAthlete } from "~/types/strava";
 import { DataTable } from "../DataTable/DataTable";
 import { columns } from "../DataTable/columns";
+import Header from "../Header/Header";
+import Athlete from "../Athlete/Athlete";
 
-const DashboardContent = ({ activities }: { activities: StravaActivity[] }) => {
+const DashboardContent = ({
+  activities,
+  athlete,
+}: {
+  activities: StravaActivity[];
+  athlete: StravaAthlete;
+}) => {
   const [mapActivities, setMapActivities] = useState<StravaActivity[]>(activities);
 
   return (
-    <main className='h-full flex flex-col p-4 gap-4'>
-      <h1 className='text-2xl'>Strava</h1>
+    <main className=' flex flex-col p-4 gap-4'>
+      <Header />
+      <Athlete athlete={athlete} activities={activities} />
       <DataTable
         columns={columns}
         data={activities}
