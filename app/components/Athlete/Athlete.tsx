@@ -9,7 +9,6 @@ const Athlete = ({
 }) => {
   const name = athlete.firstname + " " + athlete.lastname;
   const activityTypes = [...new Set(activities.map((activity) => activity.type))];
-  console.log(activityTypes);
 
   return (
     <div className='border rounded-lg w-auto px-2.5 py-1 flex flex-col gap-3'>

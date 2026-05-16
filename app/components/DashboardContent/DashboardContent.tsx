@@ -6,6 +6,7 @@ import { DataTable } from "../DataTable/DataTable";
 import { columns } from "../DataTable/columns";
 import Header from "../Header/Header";
 import Athlete from "../Athlete/Athlete";
+import AthleteCharts from "../AthleteCharts/AthleteCharts";
 
 const DashboardContent = ({
   activities,
@@ -19,7 +20,10 @@ const DashboardContent = ({
   return (
     <main className=' flex flex-col p-4 gap-4'>
       <Header />
-      <Athlete athlete={athlete} activities={activities} />
+      <div className='grid grid-cols-2'>
+        <Athlete athlete={athlete} activities={activities} />
+        <AthleteCharts athlete={athlete} activities={mapActivities} />
+      </div>
       <DataTable
         columns={columns}
         data={activities}
