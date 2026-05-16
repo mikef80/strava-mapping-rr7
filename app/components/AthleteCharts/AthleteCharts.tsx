@@ -52,7 +52,7 @@ const AthleteCharts = ({
   };
 
   return (
-    <div className='flex flex-col h-full '>
+    <div className='flex flex-col h-full border rounded-lg'>
       <div
         className='grid gap-2'
         style={{ gridTemplateColumns: `repeat(${activityTypes.length}, 1fr)` }}>

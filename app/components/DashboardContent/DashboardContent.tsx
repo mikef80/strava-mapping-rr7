@@ -20,7 +20,7 @@ const DashboardContent = ({
   return (
     <main className=' flex flex-col p-4 gap-4'>
       <Header />
-      <div className='grid grid-cols-2'>
+      <div className='grid grid-cols-2 gap-4'>
         <Athlete athlete={athlete} activities={activities} />
         <AthleteCharts athlete={athlete} activities={mapActivities} />
       </div>
